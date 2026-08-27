@@ -83,9 +83,8 @@ export default function App() {
     }
   };
 
-  // فەنکشنی سڕینەوەی کڕیار
   const handleDeleteCustomer = async (customerId: number, e: React.MouseEvent) => {
-    e.stopPropagation(); // بۆ ئەوەی نەچێتە ناو وەسڵەکەوە کاتێک کرتە لەسەر سڕینەوە دەکەیت
+    e.stopPropagation();
     if (!window.confirm('ئایا دڵنیای لە سڕینەوەی ئەم کڕیارە؟ هەموو وەسڵەکانیشی دەسڕێنەوە.')) return;
 
     const { error } = await supabase
@@ -154,234 +153,203 @@ export default function App() {
     <div className="min-h-screen bg-slate-100 font-sans text-slate-800 flex flex-col selection:bg-blue-200 selection:text-blue-900" dir="rtl">
       
       <header className="bg-gradient-to-r from-blue-900 to-indigo-900 text-white shadow-md sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <div className="bg-blue-600 p-2.5 rounded-xl shadow-inner text-white">
-              <Store size={26} />
+        <div className="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <div className="bg-blue-600 p-2 rounded-lg text-white">
+              <Store size={22} />
             </div>
-            <h1 className="text-2xl font-black tracking-tight">سیستەمی وەسڵ</h1>
+            <h1 className="text-xl font-black tracking-tight">سیستەمی وەسڵ</h1>
           </div>
         </div>
       </header>
 
-      <main className="flex-1 max-w-6xl mx-auto w-full px-6 py-8">
+      <main className="flex-1 max-w-4xl mx-auto w-full px-4 py-4 md:py-8">
         
         {activePage === 'customers' && (
-          <div className="space-y-6">
+          <div className="space-y-4">
             
-            <div className="bg-white rounded-2xl shadow-lg border border-slate-200/80 p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="bg-white rounded-2xl shadow-md border border-slate-200/80 p-5 space-y-4">
               <div>
-                <h2 className="text-3xl font-black text-slate-900">کڕیارەکان</h2>
-                <p className="text-slate-500 mt-1 font-medium">کۆی گشتی: <span className="font-bold text-blue-600">{customers.length}</span> کڕیار</p>
+                <h2 className="text-2xl font-black text-slate-900">کڕیارەکان</h2>
+                <p className="text-slate-500 text-sm mt-0.5">کۆی گشتی: <span className="font-bold text-blue-600">{customers.length}</span> کڕیار</p>
               </div>
               
-              <form onSubmit={handleAddCustomer} className="flex w-full md:w-auto gap-3">
+              <form onSubmit={handleAddCustomer} className="flex flex-col sm:flex-row gap-2.5">
                 <input 
                   type="text" 
                   value={newCustomerName}
                   onChange={(e) => setNewCustomerName(e.target.value)}
                   placeholder="ناوی کڕیاری نوێ..."
-                  className="px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none w-full md:w-80 font-medium transition-all"
+                  className="px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none w-full text-base font-medium"
                 />
                 <button 
                   type="submit" 
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3.5 rounded-xl flex items-center gap-2 transition-all shadow-md shadow-blue-500/20 active:scale-95 whitespace-nowrap font-bold"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl flex items-center justify-center gap-2 font-bold shadow-md active:scale-95 transition-all"
                 >
-                  <UserPlus size={20} />
+                  <UserPlus size={18} />
                   زیادکردن
                 </button>
               </form>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-lg border border-slate-200/80 overflow-hidden">
-              <div className="p-6 border-b border-slate-100 bg-slate-50/50">
-                <div className="relative w-full max-w-md">
+            <div className="bg-white rounded-2xl shadow-md border border-slate-200/80 overflow-hidden">
+              <div className="p-4 border-b border-slate-100 bg-slate-50/50">
+                <div className="relative w-full">
                   <input 
                     type="text" 
                     placeholder="گەڕان بەدوای کڕیار..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-white border border-slate-200 py-3.5 px-5 pr-12 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 font-medium shadow-sm transition-all"
+                    className="w-full bg-white border border-slate-200 py-3 px-4 pr-11 rounded-xl focus:outline-none focus:border-blue-500 font-medium text-sm shadow-sm"
                   />
-                  <Search className="absolute right-4 top-4 text-slate-400" size={20} />
+                  <Search className="absolute right-3.5 top-3.5 text-slate-400" size={18} />
                 </div>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="w-full text-right">
-                  <thead>
-                    <tr className="bg-slate-50 border-b border-slate-200 text-slate-600 text-sm">
-                      <th className="p-5 w-16 font-bold">#</th>
-                      <th className="p-5 font-bold">ناوی کڕیار</th>
-                      <th className="p-5 text-left font-bold">کردارەکان</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {filteredCustomers.length === 0 ? (
-                      <tr>
-                        <td colSpan={3} className="p-20 text-center text-slate-400 font-medium">
-                          هیچ کڕیارێک نەدۆزرایەوە
-                        </td>
-                      </tr>
-                    ) : (
-                      filteredCustomers.map((customer, index) => (
-                        <tr key={customer.id} className="hover:bg-blue-50/50 transition-colors">
-                          <td className="p-5 text-slate-400 font-bold">{index + 1}</td>
-                          <td className="p-5 font-bold text-slate-800 text-lg">{customer.name}</td>
-                          <td className="p-5 text-left">
-                            <div className="flex items-center justify-end gap-3">
-                              <button 
-                                onClick={(e) => handleDeleteCustomer(customer.id, e)}
-                                className="bg-red-50 text-red-600 hover:bg-red-600 hover:text-white p-2.5 rounded-xl text-sm font-bold transition-all shadow-sm"
-                                title="سڕینەوەی کڕیار"
-                              >
-                                <Trash2 size={18} />
-                              </button>
-                              <button 
-                                onClick={() => openCustomerProfile(customer)}
-                                className="bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 shadow-sm"
-                              >
-                                کردنەوەی وەسڵ
-                                <ArrowRight size={16} />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
+              <div className="divide-y divide-slate-100">
+                {filteredCustomers.length === 0 ? (
+                  <div className="p-12 text-center text-slate-400 font-medium">
+                    هیچ کڕیارێک نەدۆزرایەوە
+                  </div>
+                ) : (
+                  filteredCustomers.map((customer, index) => (
+                    <div key={customer.id} className="p-4 flex items-center justify-between hover:bg-blue-50/40 transition-colors gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span className="text-slate-400 font-bold text-sm">{index + 1}</span>
+                        <h3 className="font-bold text-slate-800 text-base truncate">{customer.name}</h3>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button 
+                          onClick={() => openCustomerProfile(customer)}
+                          className="bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm"
+                        >
+                          وەسڵ
+                          <ArrowRight size={14} />
+                        </button>
+                        <button 
+                          onClick={(e) => handleDeleteCustomer(customer.id, e)}
+                          className="bg-red-50 text-red-600 hover:bg-red-600 hover:text-white p-2 rounded-xl transition-all shadow-sm"
+                          title="سڕینەوە"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
         )}
 
         {activePage === 'invoice' && selectedCustomer && (
-          <div className="space-y-6">
+          <div className="space-y-4">
             
-            <div className="flex justify-between items-center">
+            <div>
               <button 
                 onClick={() => setActivePage('customers')}
-                className="text-slate-600 hover:text-slate-900 flex items-center gap-2 font-bold bg-white hover:bg-slate-50 px-5 py-2.5 rounded-xl border border-slate-200 shadow-sm transition-all"
+                className="text-slate-600 hover:text-slate-900 flex items-center gap-1.5 font-bold bg-white hover:bg-slate-50 px-4 py-2 rounded-xl border border-slate-200 shadow-sm text-sm transition-all"
               >
-                <ArrowRight size={18} />
-                گەڕانەوە بۆ کڕیارەکان
+                <ArrowRight size={16} />
+                گەڕانەوە
               </button>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-8 md:p-12">
+            <div className="bg-white rounded-2xl shadow-lg border border-slate-200/80 p-4 sm:p-6 space-y-6">
               
-              <div className="border-b-2 border-blue-100 pb-8 mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-                <div className="space-y-3">
-                  <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-lg font-bold">
-                    <FileText size={20} />
+              <div className="border-b border-slate-100 pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 px-3 py-1 rounded-md text-xs font-bold mb-2">
+                    <FileText size={14} />
                     وەسڵی فەرمی
                   </div>
-                  <div className="flex items-end gap-3 text-2xl">
-                    <span className="text-slate-400 font-medium">بۆ بەڕێز:</span>
-                    <span className="font-black text-slate-900 border-b-2 border-dashed border-blue-300 pb-1">{selectedCustomer.name}</span>
-                  </div>
+                  <h2 className="text-xl font-black text-slate-900">{selectedCustomer.name}</h2>
                 </div>
-                
-                <div className="text-left space-y-2 bg-slate-50 p-5 rounded-2xl border border-slate-100 w-full md:w-72 shadow-inner">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-500 font-medium">بەروار:</span>
-                    <span className="font-bold text-slate-800">{new Date().toLocaleDateString('en-GB')}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-500 font-medium">ژمارەی وەسڵ:</span>
-                    <span className="font-bold text-slate-800 font-mono">#{selectedCustomer.id}</span>
-                  </div>
+                <div className="text-left text-xs text-slate-500 bg-slate-50 px-3 py-2 rounded-xl border border-slate-100 w-full sm:w-auto">
+                  <div>بەروار: <span className="font-bold text-slate-800">{new Date().toLocaleDateString('en-GB')}</span></div>
+                  <div>ژمارە: <span className="font-bold text-slate-800 font-mono">#{selectedCustomer.id}</span></div>
                 </div>
               </div>
 
-              <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
-                <table className="w-full text-center">
-                  <thead>
-                    <tr className="bg-slate-50 border-b border-slate-200 text-slate-700">
-                      <th className="p-4 w-12 border-l border-slate-200 font-bold">#</th>
-                      <th className="p-4 text-right border-l border-slate-200 font-bold">ناوی شوێنەکان</th>
-                      <th className="p-4 w-32 border-l border-slate-200 font-bold">پانی (m)</th>
-                      <th className="p-4 w-32 border-l border-slate-200 font-bold">درێژی (m)</th>
-                      <th className="p-4 w-48 font-bold text-blue-700">کۆی گشتی</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {items.map((item, index) => (
-                      <tr key={item.id} className="hover:bg-slate-50 transition-colors">
-                        <td className="p-4 border-l border-slate-100 text-slate-400 font-bold">{index + 1}</td>
-                        <td className="p-4 text-right font-bold text-slate-800 border-l border-slate-100 text-lg">{item.name}</td>
-                        <td className="p-4 border-l border-slate-100 font-mono text-slate-600 bg-slate-50/50 text-lg" dir="ltr">{item.width}</td>
-                        <td className="p-4 border-l border-slate-100 font-mono text-slate-600 bg-slate-50/50 text-lg" dir="ltr">{item.length}</td>
-                        <td className="p-4 font-black text-blue-600 text-xl bg-blue-50/30">
-                          {calculateTotal(item.width, item.length).toLocaleString()}
-                        </td>
-                      </tr>
-                    ))}
-                    
-                    <tr className="bg-blue-50/60 border-t-2 border-blue-200 shadow-inner">
-                      <td className="p-3 border-l border-blue-100">
-                        <div className="bg-blue-200 text-blue-700 w-8 h-8 rounded-full flex items-center justify-center mx-auto">
-                          <Plus size={18} />
+              {/* فرمی زیادکردنی کاڵا بە شێوازی مۆبایل */}
+              <div className="bg-blue-50/60 p-4 rounded-2xl border border-blue-100 space-y-3">
+                <h3 className="text-xs font-bold text-blue-900">زیادکردنی شتومەک بۆ وەسڵ</h3>
+                <input 
+                  ref={nameInputRef}
+                  type="text" 
+                  placeholder="ناوی شتومەک..."
+                  value={newItem.name}
+                  onChange={(e) => setNewItem({...newItem, name: e.target.value})}
+                  onKeyDown={(e) => handleKeyDown(e, widthInputRef)}
+                  className="w-full bg-white p-3 rounded-xl outline-none border border-blue-200 focus:border-blue-500 text-right font-medium text-sm shadow-sm"
+                />
+                <div className="grid grid-cols-2 gap-2">
+                  <input 
+                    ref={widthInputRef}
+                    type="text" 
+                    placeholder="پانی (m)"
+                    value={newItem.width}
+                    onChange={(e) => setNewItem({...newItem, width: convertNumbersToEnglish(e.target.value)})}
+                    onKeyDown={(e) => handleKeyDown(e, lengthInputRef)}
+                    className="w-full bg-white p-3 rounded-xl outline-none border border-blue-200 focus:border-blue-500 text-center font-mono font-bold text-sm shadow-sm"
+                    dir="ltr"
+                  />
+                  <input 
+                    ref={lengthInputRef}
+                    type="text" 
+                    placeholder="درێژی (m)"
+                    value={newItem.length}
+                    onChange={(e) => setNewItem({...newItem, length: convertNumbersToEnglish(e.target.value)})}
+                    onKeyDown={(e) => handleKeyDown(e, 'submit')}
+                    className="w-full bg-white p-3 rounded-xl outline-none border border-blue-200 focus:border-blue-500 text-center font-mono font-bold text-sm shadow-sm"
+                    dir="ltr"
+                  />
+                </div>
+                <button 
+                  onClick={handleAddItem}
+                  className="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-md active:scale-95 text-sm flex items-center justify-center gap-2"
+                >
+                  <Plus size={18} />
+                  زیادکردنی کاڵا
+                </button>
+              </div>
+
+              {/* لیستی کاڵاکان بە شێوازی کارت (Card View) کە بۆ مۆبایل نایابە */}
+              <div className="space-y-3">
+                <h3 className="font-bold text-slate-700 text-sm">شتومەکەکان ({items.length})</h3>
+                {items.length === 0 ? (
+                  <div className="p-8 text-center text-slate-400 bg-slate-50 rounded-xl text-sm">
+                    هیچ شتومەکێک نەخراوەتە ناو ئەم وەسڵە
+                  </div>
+                ) : (
+                  items.map((item, index) => (
+                    <div key={item.id} className="bg-slate-50 border border-slate-200/80 p-4 rounded-xl flex justify-between items-center gap-2">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-slate-400">#{index + 1}</span>
+                          <span className="font-bold text-slate-900 text-base">{item.name}</span>
                         </div>
-                      </td>
-                      <td className="p-3 border-l border-blue-100">
-                        <input 
-                          ref={nameInputRef}
-                          type="text" 
-                          placeholder="ناوی شوێن بنووسە (ئینتەر بکە)..."
-                          value={newItem.name}
-                          onChange={(e) => setNewItem({...newItem, name: e.target.value})}
-                          onKeyDown={(e) => handleKeyDown(e, widthInputRef)}
-                          className="w-full bg-white p-3.5 rounded-xl outline-none border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-right font-bold shadow-sm transition-all"
-                        />
-                      </td>
-                      <td className="p-3 border-l border-blue-100">
-                        <input 
-                          ref={widthInputRef}
-                          type="text" 
-                          placeholder="پانی"
-                          value={newItem.width}
-                          onChange={(e) => setNewItem({...newItem, width: convertNumbersToEnglish(e.target.value)})}
-                          onKeyDown={(e) => handleKeyDown(e, lengthInputRef)}
-                          className="w-full bg-white p-3.5 rounded-xl outline-none border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-center font-mono font-bold shadow-sm transition-all text-lg"
-                          dir="ltr"
-                        />
-                      </td>
-                      <td className="p-3 border-l border-blue-100">
-                        <input 
-                          ref={lengthInputRef}
-                          type="text" 
-                          placeholder="درێژی"
-                          value={newItem.length}
-                          onChange={(e) => setNewItem({...newItem, length: convertNumbersToEnglish(e.target.value)})}
-                          onKeyDown={(e) => handleKeyDown(e, 'submit')}
-                          className="w-full bg-white p-3.5 rounded-xl outline-none border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-center font-mono font-bold shadow-sm transition-all text-lg"
-                          dir="ltr"
-                        />
-                      </td>
-                      <td className="p-3">
-                        <button 
-                          onClick={handleAddItem}
-                          className="w-full bg-blue-600 text-white py-3.5 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-md active:scale-95 text-lg"
-                        >
-                          زیادکردن
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                        <div className="text-xs text-slate-500 font-mono" dir="ltr">
+                          {item.width}m × {item.length}m
+                        </div>
+                      </div>
+                      <div className="text-left">
+                        <span className="text-xs text-slate-400 block">کۆ</span>
+                        <span className="font-black text-blue-600 text-base">
+                          {calculateTotal(item.width, item.length).toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
 
-              <div className="mt-12 flex justify-end">
-                <div className="bg-slate-900 text-white p-1.5 rounded-2xl shadow-xl flex items-center border border-slate-800 pr-8">
-                  <span className="text-slate-300 text-lg font-bold">کۆی گشتی مەتری وەسڵ:</span>
-                  <div className="bg-black ml-1.5 mr-6 px-10 py-5 rounded-xl border border-slate-700 shadow-inner">
-                    <span className="text-5xl font-black text-blue-400 tracking-wider">
-                      {grandTotal.toLocaleString()}
-                    </span>
-                  </div>
-                </div>
+              {/* کۆی گشتی پارە */}
+              <div className="bg-slate-900 text-white p-4 rounded-2xl shadow-md flex justify-between items-center">
+                <span className="text-slate-300 text-sm font-bold">کۆی گشتی وەسڵ:</span>
+                <span className="text-2xl font-black text-blue-400 tracking-wider font-mono">
+                  {grandTotal.toLocaleString()}
+                </span>
               </div>
 
             </div>
@@ -390,8 +358,8 @@ export default function App() {
 
       </main>
 
-      <footer className="w-full py-6 text-center text-slate-500 font-medium text-sm tracking-wide bg-white border-t border-slate-200 mt-auto">
-        Designed and Developed by <span className="font-bold text-slate-700">Eng. Masrour</span>
+      <footer className="w-full py-4 text-center text-slate-500 font-medium text-xs tracking-wide bg-white border-t border-slate-200 mt-auto">
+        Designed & Developed by <span className="font-bold text-slate-700">Eng. Masrour</span>
       </footer>
     </div>
   );
