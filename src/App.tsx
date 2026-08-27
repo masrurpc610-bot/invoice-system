@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Search, Users, FileText, 
-  Plus, ArrowRight, UserPlus, Store
+  Search, FileText, 
+  Plus, ArrowRight, UserPlus, Store, Trash2
 } from 'lucide-react';
 import { supabase } from './supabase';
 
@@ -33,7 +33,6 @@ export default function App() {
   const widthInputRef = useRef<HTMLInputElement>(null);
   const lengthInputRef = useRef<HTMLInputElement>(null);
 
-  // هێنانی کڕیارەکان لە Supabase کاتێک سیستەمەکە دەکرێتەوە
   useEffect(() => {
     fetchCustomers();
   }, []);
@@ -45,7 +44,6 @@ export default function App() {
     }
   };
 
-  // هێنانی وەسڵەکانی کڕیاری دیاریکراو
   useEffect(() => {
     if (selectedCustomer) {
       fetchInvoiceItems(selectedCustomer.id);
@@ -70,7 +68,6 @@ export default function App() {
     });
   };
 
-  // زیادکردنی کڕیاری نوێ بۆ Supabase
   const handleAddCustomer = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCustomerName.trim()) return;
@@ -86,6 +83,25 @@ export default function App() {
     }
   };
 
+  // فەنکشنی سڕینەوەی کڕیار
+  const handleDeleteCustomer = async (customerId: number, e: React.MouseEvent) => {
+    e.stopPropagation(); // بۆ ئەوەی نەچێتە ناو وەسڵەکەوە کاتێک کرتە لەسەر سڕینەوە دەکەیت
+    if (!window.confirm('ئایا دڵنیای لە سڕینەوەی ئەم کڕیارە؟ هەموو وەسڵەکانیشی دەسڕێنەوە.')) return;
+
+    const { error } = await supabase
+      .from('customers')
+      .delete()
+      .eq('id', customerId);
+
+    if (!error) {
+      setCustomers(customers.filter(c => c.id !== customerId));
+      if (selectedCustomer?.id === customerId) {
+        setSelectedCustomer(null);
+        setActivePage('customers');
+      }
+    }
+  };
+
   const filteredCustomers = customers.filter(c => c.name.includes(searchQuery));
 
   const openCustomerProfile = (customer: Customer) => {
@@ -93,7 +109,6 @@ export default function App() {
     setActivePage('invoice');
   };
 
-  // زیادکردنی کاڵا ڕاستەوخۆ و خەزنکردنی لە Supabase
   const handleAddItem = async () => {
     if (!newItem.name || !newItem.width || !newItem.length || !selectedCustomer) return;
     
@@ -117,13 +132,13 @@ export default function App() {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent, nextInputRef: React.RefObject<HTMLInputElement> | 'submit') => {
+  const handleKeyDown = (e: React.KeyboardEvent, nextRef: React.RefObject<HTMLInputElement | null> | 'submit') => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      if (nextInputRef === 'submit') {
+      if (nextRef === 'submit') {
         handleAddItem();
-      } else {
-        nextInputRef.current?.focus();
+      } else if (nextRef && typeof nextRef === 'object' && 'current' in nextRef) {
+        nextRef.current?.focus();
       }
     }
   };
@@ -214,13 +229,22 @@ export default function App() {
                           <td className="p-5 text-slate-400 font-bold">{index + 1}</td>
                           <td className="p-5 font-bold text-slate-800 text-lg">{customer.name}</td>
                           <td className="p-5 text-left">
-                            <button 
-                              onClick={() => openCustomerProfile(customer)}
-                              className="bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 mr-auto shadow-sm"
-                            >
-                              کردنەوەی وەسڵ
-                              <ArrowRight size={16} />
-                            </button>
+                            <div className="flex items-center justify-end gap-3">
+                              <button 
+                                onClick={(e) => handleDeleteCustomer(customer.id, e)}
+                                className="bg-red-50 text-red-600 hover:bg-red-600 hover:text-white p-2.5 rounded-xl text-sm font-bold transition-all shadow-sm"
+                                title="سڕینەوەی کڕیار"
+                              >
+                                <Trash2 size={18} />
+                              </button>
+                              <button 
+                                onClick={() => openCustomerProfile(customer)}
+                                className="bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 shadow-sm"
+                              >
+                                کردنەوەی وەسڵ
+                                <ArrowRight size={16} />
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))
