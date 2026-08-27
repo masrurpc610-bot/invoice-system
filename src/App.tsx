@@ -300,7 +300,7 @@ export default function App() {
                   <thead>
                     <tr className="bg-slate-50 border-b border-slate-200 text-slate-700">
                       <th className="p-4 w-12 border-l border-slate-200 font-bold">#</th>
-                      <th className="p-4 text-right border-l border-slate-200 font-bold">ناوی شتومەک / کاڵا</th>
+                      <th className="p-4 text-right border-l border-slate-200 font-bold">ناوی شوێنەکان</th>
                       <th className="p-4 w-32 border-l border-slate-200 font-bold">پانی (m)</th>
                       <th className="p-4 w-32 border-l border-slate-200 font-bold">درێژی (m)</th>
                       <th className="p-4 w-48 font-bold text-blue-700">کۆی گشتی</th>
@@ -329,7 +329,7 @@ export default function App() {
                         <input 
                           ref={nameInputRef}
                           type="text" 
-                          placeholder="ناوی شتومەک بنووسە (ئینتەر بکە)..."
+                          placeholder="ناوی شوێن بنووسە (ئینتەر بکە)..."
                           value={newItem.name}
                           onChange={(e) => setNewItem({...newItem, name: e.target.value})}
                           onKeyDown={(e) => handleKeyDown(e, widthInputRef)}
@@ -375,7 +375,7 @@ export default function App() {
 
               <div className="mt-12 flex justify-end">
                 <div className="bg-slate-900 text-white p-1.5 rounded-2xl shadow-xl flex items-center border border-slate-800 pr-8">
-                  <span className="text-slate-300 text-lg font-bold">کۆی گشتی پارەی وەسڵ:</span>
+                  <span className="text-slate-300 text-lg font-bold">کۆی گشتی مەتری وەسڵ:</span>
                   <div className="bg-black ml-1.5 mr-6 px-10 py-5 rounded-xl border border-slate-700 shadow-inner">
                     <span className="text-5xl font-black text-blue-400 tracking-wider">
                       {grandTotal.toLocaleString()}
